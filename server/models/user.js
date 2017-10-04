@@ -52,6 +52,16 @@ UserSchema.methods.toJSON = function() {
   return _.pick(userObject, ["_id", "email"]);
 };
 
+UserSchema.methods.removetoken = function(token) {
+  var user = this;
+
+  return user.update({
+    $pull: {
+      tokens: { token }
+    }
+  })
+};
+
 UserSchema.statics.findByToken = function(token) {
   var User = this;
   var decoded;
@@ -106,7 +116,6 @@ UserSchema.pre('save', function(next) {
   } else {
     next();
   }
-
 });
 
 const User = mongoose.model('User', UserSchema);
